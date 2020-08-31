@@ -8,10 +8,17 @@ import time
 import json
 import datetime
 import threading
+from tinydb import TinyDB, Query
 import time
-import flask
 from bluepy import btle
 import flask
+from flask import Response
+
+# Database Configuration
+# Storage location of the database file
+databaseWritePath = "switchbot_data.json"
+# TinyDb
+database = TinyDB(databaseWritePath)
 
 # Flask configuration
 app = flask.Flask(__name__)
@@ -25,9 +32,6 @@ API_PORT=5000
 METER_ROOMS = ['Bedroom']
 METER_MACS = ['e8:fe:50:d1:75:dd']
 debug_level = 1
-
-# Collection of latest meter readings
-CACHED_METER_READING = []
 
 if os.getenv('C', '1') == '0':
     ANSI_RED = ''
@@ -91,16 +95,19 @@ class ScanProcessor():
     def _publish(self, room, tempc, humidity, battery):
         try:
             now = datetime.datetime.now()
-            topic = '{}/{}'.format(room.lower(), 'meter')
             timeNow = now.strftime("%Y-%m-%d %H:%M:%S")
-            msgdata = '{"time":\"' + timeNow + '\","temperature":' + str(tempc) + ',"humidity":' + str(humidity) + ',"battery":' + str(battery) +'}'
 
-            # Save the meter reading to file
-            CACHED_METER_READING.append(
-                MeterReading(timeNow, tempc, humidity, battery)
-                )
+            # Get the readings table
+            readingsTable = database.table('readings')
 
-            print(msgdata)
+            # Add the reading to the local database
+            readingsTable.insert({
+                'time': timeNow,
+                'room': room,
+                'temperature': str(tempc),
+                'humidity': str(humidity),
+                'battery': str(battery)
+            })
         except:
             print("_publish: Oops!",sys.exc_info()[0],"occurred.")
 
@@ -115,6 +122,8 @@ class ScanBackgroundWorker(object):
 
     def run(self):
         while True:
+            # Clear previously taken readings before scan
+            database.drop_table('readings')
             # Get the latest readings from the SwitchBot Meter
             scanner = btle.Scanner().withDelegate(ScanProcessor())
             scanner.scan()
@@ -124,9 +133,9 @@ class ScanBackgroundWorker(object):
 # Shows all meter reading in local memory
 @app.route('/meters', methods=['GET'])
 def allMeters():
-    jsonOutput = json.dumps(CACHED_METER_READING)
-    print(CACHED_METER_READING)
-    return jsonOutput
+    latestReadings = database.table('readings')
+    latestReadingsJson = json.dumps(latestReadings.all())
+    return Response(latestReadingsJson, mimetype='application/json')
 
 def main():
     ScanBackgroundWorker()
