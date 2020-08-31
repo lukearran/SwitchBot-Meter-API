@@ -147,12 +147,16 @@ def getMeterByRoom(meter_name):
     # Query the table for readings matching the room name
     readings = Query()
     matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
-    # Select the first item on the list
-    firstMatchingDevice = matchingReadingsByRoom[0]
-    # Dump the results into a JSON string
-    latestReadingsJson = json.dumps(firstMatchingDevice)
-    # Return the result of the query in the HTTP Response
-    return Response(latestReadingsJson, mimetype='application/json')
+    # Check if the query returned a result
+    if (len(matchingReadingsByRoom) > 0):
+        # Select the first item on the list
+        firstMatchingDevice = matchingReadingsByRoom[0]
+        # Dump the results into a JSON string
+        latestReadingsJson = json.dumps(firstMatchingDevice)
+        # Return the result of the query in the HTTP Response
+        return Response(latestReadingsJson, mimetype='application/json')
+    else:
+        return Response(json.dumps([]), status=204, mimetype='application/json')
 
 def main():
     ScanBackgroundWorker()
