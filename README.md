@@ -3,11 +3,20 @@ Python script to read temperature, humidity and battery from a Switchbot Meter d
 
 You will need:
 1. Python3
-2. [BluePy library](https://github.com/IanHarvey/bluepy)
-3. [Flask](https://github.com/pallets/flask)
-4. [TinyDb](https://github.com/msiemens/tinydb)
+2. [SwitchBot Thermometer](https://www.amazon.co.uk/SwitchBot-Thermometer-Hygrometer-Alexa-iPhone/dp/B07L4QNZVF/ref=sr_1_2?dchild=1&keywords=switchbot+meter&qid=1598878292&sr=8-2)
+3. [BluePy](https://github.com/IanHarvey/bluepy)
+4. [Flask](https://github.com/pallets/flask)
+5. [TinyDb](https://github.com/msiemens/tinydb)
 
 ## Getting Started
+
+### Install
+
+1. Install Python3 and Pip3: `sudo apt-get install python3 python3-pip`
+2. Install BluePy (Bluetooth Framework):  `sudo pip3 install bluepy`
+3. Install Flask (API Framework): `sudo pip3 install -U Flask`
+4. Install TinyDb (Storage): `sudo pip3 install tinydb`
+5. Run the script: `sudo python3 meters.py`
 
 ### SwitchBot Configuration
 
