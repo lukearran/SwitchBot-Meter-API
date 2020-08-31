@@ -105,9 +105,9 @@ class ScanProcessor():
             readingsTable.insert({
                 'time': timeNow,
                 'room': room,
-                'temperature': str(tempc),
-                'humidity': str(humidity),
-                'battery': str(battery)
+                'temperature': tempc,
+                'humidity': humidity,
+                'battery': battery
             })
         except:
             print("_publish: Oops!",sys.exc_info()[0],"occurred.")
