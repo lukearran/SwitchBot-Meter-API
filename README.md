@@ -10,6 +10,11 @@ You will need:
 
 ## Getting Started
 
+### Use Cases
+
+- View your air quality data within the iOS Home app by using [HomeBridge](https://homebridge.io/) and the **[homebridge-http-humidity-sensor](https://github.com/Supereg/homebridge-http-humidity-sensor)** plugin.
+
+
 ### Install
 
 1. Install Python3 and Pip3: `sudo apt-get install python3 python3-pip`
@@ -61,4 +66,25 @@ Host: 192.168.1.233:5000
         "battery": "100"
     }
 ]
+```
+
+### '/meters/room' - Get Meter Device by Name
+
+#### Request
+
+```http
+GET /meters/Bedroom HTTP/1.1
+Host: 192.168.1.233:5000
+```
+
+#### Response
+
+```json
+{
+    "time": "2020-08-31 23:40:03",
+    "room": "Bedroom",
+    "temperature": "24.4",
+    "humidity": "65",
+    "battery": "100"
+}
 ```
