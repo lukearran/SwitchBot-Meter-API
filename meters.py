@@ -12,7 +12,7 @@ from tinydb import TinyDB, Query
 import time
 from bluepy import btle
 import flask
-from flask import Response
+from flask import Response, request
 
 # Database Configuration
 # Storage location of the database file
@@ -136,6 +136,22 @@ class ScanBackgroundWorker(object):
 def allMeters():
     latestReadings = database.table('readings')
     latestReadingsJson = json.dumps(latestReadings.all())
+    return Response(latestReadingsJson, mimetype='application/json')
+
+@app.route('/meters/<meter_name>', methods=['GET'])
+def getMeterByRoom(meter_name):
+    # Get the room name
+    meterRoom = meter_name
+    # Get the readings table from the database
+    latestReadings = database.table('readings')
+    # Query the table for readings matching the room name
+    readings = Query()
+    matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
+    # Select the first item on the list
+    firstMatchingDevice = matchingReadingsByRoom[0]
+    # Dump the results into a JSON string
+    latestReadingsJson = json.dumps(firstMatchingDevice)
+    # Return the result of the query in the HTTP Response
     return Response(latestReadingsJson, mimetype='application/json')
 
 def main():
