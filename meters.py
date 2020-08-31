@@ -114,7 +114,7 @@ class ScanProcessor():
 
 # Runs in the background, getting data from SwitchBot Meters and then storing it in local memory
 class ScanBackgroundWorker(object):
-    def __init__(self, interval=20):
+    def __init__(self, interval=30):
         self.interval = interval
 
         thread = threading.Thread(target=self.run, args=())
@@ -157,6 +157,48 @@ def getMeterByRoom(meter_name):
         return Response(latestReadingsJson, mimetype='application/json')
     else:
         return Response(json.dumps([]), status=204, mimetype='application/json')
+
+@app.route('/humidity/<meter_name>', methods=['GET'])
+def getHumidityByRoom(meter_name):
+    # Get the room name
+    meterRoom = meter_name
+    # Get the readings table from the database
+    latestReadings = database.table('readings')
+    # Query the table for readings matching the room name
+    readings = Query()
+    matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
+    # Check if the query returned a result
+    if (len(matchingReadingsByRoom) > 0):
+        # Select the first item on the list
+        firstMatchingDevice = matchingReadingsByRoom[0]
+        # Get the humidity value from the document
+        humidity = firstMatchingDevice["humidity"]
+        print('Humidity in ' + str(meterRoom) + " " + str(humidity))
+        # Return the result of the query in the HTTP Response
+        return Response(str(humidity))
+    else:
+        return Response(status=204)
+
+@app.route('/temperature/<meter_name>', methods=['GET'])
+def getTempByRoom(meter_name):
+    # Get the room name
+    meterRoom = meter_name
+    # Get the readings table from the database
+    latestReadings = database.table('readings')
+    # Query the table for readings matching the room name
+    readings = Query()
+    matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
+    # Check if the query returned a result
+    if (len(matchingReadingsByRoom) > 0):
+        # Select the first item on the list
+        firstMatchingDevice = matchingReadingsByRoom[0]
+        # Get the temperature value from the document
+        temperature = firstMatchingDevice["temperature"]
+        print('temperature in ' + str(meterRoom) + " " + str(temperature))
+        # Return the result of the query in the HTTP Response
+        return Response(str(temperature))
+    else:
+        return Response(status=204)
 
 def main():
     ScanBackgroundWorker()
