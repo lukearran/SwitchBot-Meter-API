@@ -1,5 +1,5 @@
 # SwitchBot Meter Readings
-Python script to read temperature, humidity and battery from Switchbot Meter, and make the data accessible via an API on your local network. The script has been tested on a Raspberry Pi Zero W using Raspberry Pi OS.
+Python script to read temperature, humidity and battery from a Switchbot Meter device, and then make the data accessible via a API on your local network. The script has been tested on a Raspberry Pi Zero W using Raspberry Pi OS.
 
 You will need:
 1. Python3
