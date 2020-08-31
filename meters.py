@@ -31,6 +31,7 @@ API_PORT=5000
 # SwitchBot Meter Configuration
 METER_ROOMS = ['Bedroom']
 METER_MACS = ['e8:fe:50:d1:75:dd']
+
 debug_level = 1
 
 if os.getenv('C', '1') == '0':
@@ -113,7 +114,7 @@ class ScanProcessor():
 
 # Runs in the background, getting data from SwitchBot Meters and then storing it in local memory
 class ScanBackgroundWorker(object):
-    def __init__(self, interval=60):
+    def __init__(self, interval=20):
         self.interval = interval
 
         thread = threading.Thread(target=self.run, args=())

@@ -1,55 +1,55 @@
-# Switchbot_Py_Meter
-Python script to read temperature, humidity and battery from Switchbot Meter and send via MQTT (for Home Assistant etc). I am running on a Raspberry Pi Zero W under Raspbian.
+# SwitchBot Meter Readings
+Python script to read temperature, humidity and battery from Switchbot Meter, and make the data accessible via an API on your local network. The script has been tested on a Raspberry Pi Zero W using Raspberry Pi OS.
 
 You will need:
 1. Python3
-2. BluePy library (https://github.com/IanHarvey/bluepy)
-3. Paho MQTT Library (https://github.com/eclipse/paho.mqtt.python)
+2. [BluePy library](https://github.com/IanHarvey/bluepy)
+3. [Flask](https://github.com/pallets/flask)
+4. [TinyDb](https://github.com/msiemens/tinydb)
 
-Edit meters.py to add your configuration information:
-1. Switchbot Meter Mac Addresses & "rooms".
-2. MQTT Server address & login
-3. Once running OK, change debug_level to 0. 
+## Getting Started
 
-MQTT Topic example:
-```
-room1/meter
-```
-Payload example:
-```
-room1/meter: {"time":"2019-12-27 11:44:36","temperature":20.2,"humidity":57,"battery":100}
-```
+### SwitchBot Configuration
 
-Home Assistant configuration.yaml example
-```
-- platform: mqtt
-    unique_id: "room1_meter"
-    name: "Room 1 Meter"
-    state_topic: "room1/meter"
-    value_template: "{{ value_json.temperature }}"
-    unit_of_measurement: "°C"
-  - platform: mqtt
-    unique_id: "room1_meter_humidity"
-    name: "Room 1 Meter Humidity"
-    state_topic: "room1/meter"
-    value_template: "{{ value_json.humidity }}"
-  - platform: mqtt
-    unique_id: "room1_meter_time"
-    name: "Room 1 Meter Last Update"
-    state_topic: "room1/meter"
-    value_template: "{{ value_json.time }}"
-  - platform: mqtt
-    unique_id: "room1_meter_battery"
-    name: "Room 1 Meter Battery"
-    state_topic: "room1/meter"
-    value_template: "{{ value_json.battery }}"
+To locate your SwitchBot Meter by Bluetooth in the local area, the MAC address and name of the meter reading is required. You can find this information within the SwitchBot mobile application. Once found, set the following variables with the values from your device.
 
+```python
+# SwitchBot Meter Configuration
+METER_ROOMS = ['Bedroom']
+METER_MACS = ['e8:fe:50:d1:75:dd']
 ```
 
-Run command is: 
-Sudo Python3 meters.py
+### API Configuration
 
-I run the script every 5 minutes using /etc/crontab. Add the line below to /etc/crontab
+By default, the API will be accessible via the network port 5000. To change this, along with the hostname of the API server, set the following configuration with your values.
+
+```python
+# API Configuration
+API_HOST="localhost"
+API_PORT=5000
 ```
-*/5 *   * * *   pi      sudo python3 /home/pi/Switchbot_Py_Meter/meters/meters.py >> /home/pi/Switchbot_Py_Meter/meters.log 2>&1
+
+## API Methods
+
+### '/meters' - All Meter Devices
+
+#### Request
+
+```http
+GET /meters HTTP/1.1
+Host: 192.168.1.233:5000
+```
+
+#### Response
+
+```json
+[
+    {
+        "time": "2020-08-31 13:38:24",
+        "room": "Bedroom",
+        "temperature": "22.5",
+        "humidity": "65",
+        "battery": "100"
+    }
+]
 ```
