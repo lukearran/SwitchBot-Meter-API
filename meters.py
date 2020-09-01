@@ -134,7 +134,7 @@ class ScanBackgroundWorker(object):
 # Shows all meter reading in local memory
 @app.route('/meters', methods=['GET'])
 def allMeters():
-    latestReadings = database.table('readings')
+    latestReadings = database.table('readings', cache_size=0)
     latestReadingsJson = json.dumps(latestReadings.all())
     return Response(latestReadingsJson, mimetype='application/json')
 
@@ -143,7 +143,7 @@ def getMeterByRoom(meter_name):
     # Get the room name
     meterRoom = meter_name
     # Get the readings table from the database
-    latestReadings = database.table('readings')
+    latestReadings = database.table('readings', cache_size=0)
     # Query the table for readings matching the room name
     readings = Query()
     matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
@@ -163,7 +163,7 @@ def getHumidityByRoom(meter_name):
     # Get the room name
     meterRoom = meter_name
     # Get the readings table from the database
-    latestReadings = database.table('readings')
+    latestReadings = database.table('readings', cache_size=0)
     # Query the table for readings matching the room name
     readings = Query()
     matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
@@ -184,7 +184,7 @@ def getTempByRoom(meter_name):
     # Get the room name
     meterRoom = meter_name
     # Get the readings table from the database
-    latestReadings = database.table('readings')
+    latestReadings = database.table('readings', cache_size=0)
     # Query the table for readings matching the room name
     readings = Query()
     matchingReadingsByRoom = latestReadings.search(readings.room == meterRoom)
