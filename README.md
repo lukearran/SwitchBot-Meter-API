@@ -12,7 +12,7 @@ You will need:
 
 ### Use Cases
 
-- View your air quality data within the iOS Home app by using [HomeBridge](https://homebridge.io/) and the **[homebridge-http-humidity-sensor](https://github.com/Supereg/homebridge-http-humidity-sensor)** plugin.
+- View your air quality and temperature data within the iOS Home app by using [HomeBridge](https://homebridge.io/) with  **[homebridge-http-humidity-sensor](https://github.com/Supereg/homebridge-http-humidity-sensor)** & **[homebridge-http-temperature-sensor](https://github.com/Supereg/homebridge-http-temperature-sensor)** plugins.
 
 
 ### Install
