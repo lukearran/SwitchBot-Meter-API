@@ -1,0 +1,14 @@
+[Unit]
+Description=SwitchBotApi
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u meters.py
+WorkingDirectory=/home/pi/Services
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

@@ -202,7 +202,7 @@ def getTempByRoom(meter_name):
 
 def main():
     ScanBackgroundWorker()
-    app.run(host="192.168.1.233", port=5000, debug=True)
+    app.run(host=API_HOST, port=API_PORT, debug=True)
 
 if __name__ == "__main__":
         main()
